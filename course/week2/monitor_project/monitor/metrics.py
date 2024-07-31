@@ -25,7 +25,7 @@ def get_ks_score(tr_probs, te_probs):
   # te_probs: torch.Tensor
   #   predicted probabilities from test test
   # score: float - between 0 and 1
-  pass  # remove me
+  ks_2samp(tr_probs.numpy()), te_probs.numpy())
   # ============================
   return score
 
@@ -97,7 +97,7 @@ def get_vocab_outlier(tr_vocab, te_vocab):
   # te_vocab: dict[str, int]
   #   Map from word to count for test examples
   # score: float (between 0 and 1)
-  pass  # remove me
+  score = 1-len(set(tr_vocab.keys()).intersection(set(te_vocab.keys())))/len(tr_vocab.keys())
   # ============================
   return score
 
