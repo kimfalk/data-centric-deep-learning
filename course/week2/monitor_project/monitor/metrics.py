@@ -25,7 +25,7 @@ def get_ks_score(tr_probs, te_probs):
   # te_probs: torch.Tensor
   #   predicted probabilities from test test
   # score: float - between 0 and 1
-  ks_2samp(tr_probs.numpy()), te_probs.numpy())
+  ks_2samp(tr_probs.numpy(), te_probs.numpy())
   # ============================
   return score
 
