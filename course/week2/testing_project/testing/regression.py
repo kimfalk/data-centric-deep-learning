@@ -99,7 +99,9 @@ def build_regression_test(system, loader):
     # batch_is_correct: List[int] (not a torch.Tensor!)
     #   List of integers - 1 if the model got that element correct 
     #                    - 0 if the model got that element incorrect
-    pass # remove me
+    for expected, predict in zip(labels, logits):
+      batch_is_correct.append(expected == predict)
+      batch_loss.append(abs(expected-predict))
     # ================================
     losses.extend(batch_loss)
     is_correct.extend(batch_is_correct)

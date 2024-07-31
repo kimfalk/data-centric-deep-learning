@@ -166,11 +166,14 @@ class MNISTDirectionalityTest(BaseTest):
       # --
       # batch_metric: float (not torch.Tensor!)
       #   Metric computed on a minibatch
-      pass  # remove me
+      for pred_raw, preds_trans in zip(preds_raw, preds_transformed):
+        if pred_raw == preds_trans:
+          batch_metric += 1  
       # ================================
       metric.append(batch_metric)
       pbar.update()
     pbar.close()
 
     results = {'acc': float(np.mean(metric))}
+    
     system.test_results = results
