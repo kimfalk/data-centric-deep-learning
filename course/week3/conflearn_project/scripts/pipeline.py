@@ -150,13 +150,28 @@ class TrainIdentifyReview(FlowSpec):
       # Pseudocode:
       # --
       # Get train and test slices of X and y.
+      X_tensor = torch.tensor(X, dtype=torch.float32).to(device)
+      y_tensor = torch.tensor(y, dtype=torch.long).to(device)
       # Convert to torch tensors.
+      train_dataset = TensorDataset(X_tensor[train_index], y_tensor[train_index])
+      test_dataset = TensorDataset(X_tensor[test_index], y_tensor[test_index])
       # Create train/test datasets using tensors.
       # Create train/test data loaders from datasets.
+      x_train_loader = torch.utils.data.DataLoader(X_train_tensor, batch_size=50, shuffle=True, num_workers=4)
+      y_train_loader = torch.utils.data.DataLoader(y_train_tensor, batch_size=50, shuffle=True, num_workers=4)
+      
       # Create `SentimentClassifierSystem`.
+      model = SentimentClassifierSystem(self.config)
       # Create `Trainer` and call `fit`.
+      trainer = Trainer(
+      max_epochs = self.config.train.optimizer.max_epochs,
+      callbacks = [checkpoint_callback],)
+
+      trainer.fit(scs, train_dataloaders=x_train_loader)
       # Call `predict` on `Trainer` and the test data loader.
+      probs_ = trainer.predict(test_dataset)
       # Convert probabilities back to numpy (make sure 1D).
+      probs_ = probs_.cpu().numpy().flatten()
       # 
       # Types:
       # --
@@ -202,7 +217,7 @@ class TrainIdentifyReview(FlowSpec):
     # HINT: use cleanlab. See tutorial. 
     # 
     # Our solution is one function call.
-    # 
+    ranked_label_issues = find_label_issues(dm.all_df.label ,prob, return_indices_ranked_by="self_confidence")
     # Types
     # --
     # ranked_label_issues: List[int]
@@ -300,9 +315,9 @@ class TrainIdentifyReview(FlowSpec):
     # 
     # Pseudocode:
     # --
-    # dm.train_dataset.data = training slice of self.all_df
-    # dm.dev_dataset.data = dev slice of self.all_df
-    # dm.test_dataset.data = test slice of self.all_df
+    dm.train_dataset.data = self.all_df.loc[0: train_size]
+    dm.dev_dataset.data = self.all_df.loc[train_size: train_size + dev_size]
+    dm.test_dataset.data = self.all_df[train_size + dev_size : ]
     # TODO
     # # ====================================
 
