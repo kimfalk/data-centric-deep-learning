@@ -317,7 +317,7 @@ class TrainIdentifyReview(FlowSpec):
     # --
     dm.train_dataset.data = self.all_df.loc[0: train_size]
     dm.dev_dataset.data = self.all_df.loc[train_size: train_size + dev_size]
-    dm.test_dataset.data = self.all_df[train_size + dev_size : ]
+    dm.test_dataset.data = self.all_df[train_size + dev_size: ]
     # TODO
     # # ====================================
 
